@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+
+*{
+    font-family:"Poppins",sans-serif;
+}
+
+
+.about-page{
+    width:100%;
+    min-height:100vh;
+    background:#f6fff8;
+    padding:20px 0;
+}
+
+
+
+/* About Main */
+
+.about-container{
+
+    width:100%;
+
+    background:white;
+
+    padding:50px 80px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+}
+
+
+
+/* Left Side */
+
+.about-content{
+
+    width:55%;
+
+}
+
+
+.about-content h1{
+
+    font-size:42px;
+    color:#1b4332;
+
+}
+
+
+.about-content h1 span{
+
+    color:#2d6a4f;
+
+}
+
+
+
+.intro{
+    color:#666;
+    line-height:1.7;
+    margin-bottom:50px;
+}
+
+
+
+/* Mission Vision Impact */
+
+
+.about-card{
+
+    display:flex;
+
+    gap:15px;
+
+    margin-top:25px;
+
+}
+
+
+
+.icon{
+
+    width:45px;
+    height:45px;
+
+    border-radius:50%;
+
+    background:#d8f3dc;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:#2d6a4f;
+
+}
+
+
+
+
+/* Right Image */
+
+.about-image{
+
+    width:40%;
+
+    display:flex;
+
+    justify-content:center;
+
+}
+
+
+.about-image img{
+
+    width:100%;
+
+    max-width:450px;
+
+}
+
+
+
+/* Stats */
+
+
+.stats{
+
+    width:100%;
+
+    padding:30px 80px;
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:20px;
+
+}
+
+
+
+.stat-box{
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:15px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+
+}
+
+
+
+.stat-box svg{
+
+    color:#2d6a4f;
+
+    font-size:25px;
+
+}
+
+
+
+.stat-box h2{
+
+    margin:0;
+
+    color:#1b4332;
+
+}
+
+
+
+.stat-box p{
+
+    margin:0;
+
+    color:#777;
+
+}
+
+
+
+/* Mobile */
+
+@media(max-width:900px){
+
+.about-container{
+
+    flex-direction:column;
+
+    padding:30px;
+
+}
+
+
+.about-content,
+.about-image{
+
+    width:100%;
+
+}
+
+
+.stats{
+
+    grid-template-columns:repeat(2,1fr);
+
+    padding:30px;
+
+}
+
+}
+
+
+@media(max-width:500px){
+
+.stats{
+
+    grid-template-columns:1fr;
+
+}
+
+}

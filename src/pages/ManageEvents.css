@@ -1,0 +1,363 @@
+/* ================= PAGE ================= */
+
+.manage-events-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px 55px;
+  background: #f5f7fb;
+  box-sizing: border-box;
+}
+
+
+/* ================= HEADER ================= */
+
+.manage-header {
+  margin-bottom: 28px;
+}
+
+.manage-header h2 {
+  margin: 0 0 8px;
+  font-size: 32px;
+  color: #0b5d3f;
+  font-weight: 700;
+}
+
+.manage-header p {
+  margin: 0;
+  color: #666;
+  font-size: 17px;
+}
+
+
+/* ================= TABLE CONTAINER ================= */
+
+.table-container {
+  width: 100%;
+  background: white;
+  border-radius: 14px;
+  overflow-x: auto;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+/* ================= TABLE ================= */
+
+.manage-events-page table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+
+/* ================= TABLE HEADER ================= */
+
+.manage-events-page thead {
+  background: #f1f5f9;
+}
+
+.manage-events-page th {
+  padding: 18px 20px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 700;
+  color: #222;
+  white-space: nowrap;
+}
+
+
+/* Column widths */
+
+.manage-events-page th:nth-child(1) {
+  width: 15%;
+}
+
+.manage-events-page th:nth-child(2) {
+  width: 17%;
+}
+
+.manage-events-page th:nth-child(3) {
+  width: 16%;
+}
+
+.manage-events-page th:nth-child(4) {
+  width: 20%;
+}
+
+.manage-events-page th:nth-child(5) {
+  width: 13%;
+}
+
+.manage-events-page th:nth-child(6) {
+  width: 19%;
+}
+
+
+/* ================= TABLE BODY ================= */
+
+.manage-events-page td {
+  padding: 20px;
+  border-top: 1px solid #eeeeee;
+  font-size: 15px;
+  color: #444;
+  vertical-align: middle;
+}
+
+.manage-events-page tbody tr {
+  background: white;
+}
+
+.manage-events-page tbody tr:hover {
+  background: #fafafa;
+}
+
+
+/* Event name */
+
+.manage-events-page td strong {
+  color: #222;
+  font-weight: 700;
+}
+
+
+/* ================= STATUS ================= */
+
+.joined-badge {
+  display: inline-block;
+  padding: 7px 14px;
+  border-radius: 20px;
+  background: #fff4dc;
+  color: #b06a00;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.completed-badge {
+  display: inline-block;
+  padding: 7px 14px;
+  border-radius: 20px;
+  background: #e8f7ed;
+  color: #16833b;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.active-status {
+  color: #16833b;
+  font-weight: 600;
+}
+
+.no-volunteer {
+  color: #999 !important;
+  font-style: italic;
+}
+
+
+/* ================= ACTION COLUMN ================= */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+
+/* ================= SMALL ICON BUTTON ================= */
+
+/* ================= SMALL EDIT ICON ================= */
+
+.manage-events-page .edit-btn {
+  width: 30px;
+  height: 30px;
+
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #e8f5e9;
+  color: #08734f;
+
+  border: 1px solid #08734f;
+  border-radius: 5px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+  line-height: 1;
+
+  transition: 0.2s ease;
+}
+
+.manage-events-page .edit-btn:hover {
+  background: #08734f;
+  color: white;
+}
+
+
+/* ================= EDIT ================= */
+
+.edit-btn {
+  background: #e8f5e9;
+  color: #08734f;
+
+  border: 1px solid #08734f;
+}
+
+.edit-btn:hover {
+  background: #08734f;
+  color: white;
+}
+
+
+/* ================= DELETE ================= */
+
+.delete-btn {
+  background: #ffebee;
+  color: #d32f2f;
+
+  border: 1px solid #ffccd2;
+}
+
+.delete-btn:hover {
+  background: #d32f2f;
+  color: white;
+}
+
+
+
+/* ================= COMPLETE BUTTON ================= */
+
+.manage-events-page .actions .complete-btn {
+  width: auto !important;
+  min-width: 92px !important;
+  height: 34px !important;
+
+  padding: 0 12px !important;
+  margin: 0 !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  gap: 6px !important;
+
+  background: #28a745 !important;
+  color: white !important;
+
+  border: none !important;
+  border-radius: 5px !important;
+
+  cursor: pointer !important;
+
+  font-size: 13px !important;
+  font-weight: 600 !important;
+
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+
+  transition: 0.2s ease !important;
+}
+
+.manage-events-page .actions .complete-btn:hover {
+  background: #218838 !important;
+}
+
+.manage-events-page .actions .complete-btn svg {
+  font-size: 12px !important;
+}
+
+.complete-btn:hover {
+  background: #218838;
+}
+
+
+/* ================= CERTIFICATE ================= */
+
+.certificate-text {
+  color: #16833b;
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+
+/* ================= NO DATA ================= */
+
+.no-data {
+  text-align: center !important;
+  padding: 45px !important;
+  color: #888 !important;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 900px) {
+
+  .manage-events-page {
+    padding: 25px 15px;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .manage-events-page table {
+    min-width: 950px;
+  }
+
+  .manage-header h2 {
+    font-size: 27px;
+  }
+
+  .manage-header p {
+    font-size: 15px;
+  }
+}
+
+/* ================= FINAL SMALL EDIT BUTTON ================= */
+
+.manage-events-page .actions .edit-btn {
+  width: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+
+  height: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex: 0 0 34px !important;
+
+  background: #e8f5e9 !important;
+  color: #0b5d3f !important;
+
+  border: 1px solid #0b5d3f !important;
+  border-radius: 5px !important;
+
+  font-size: 15px !important;
+  line-height: 1 !important;
+
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+}
+
+/* Edit pencil itself */
+.manage-events-page .actions .edit-btn .edit-icon {
+  font-size: 15px !important;
+  line-height: 1 !important;
+}
+
+/* Hover */
+.manage-events-page .actions .edit-btn:hover {
+  background: #0b5d3f !important;
+  color: white !important;
+}

@@ -1,0 +1,319 @@
+/* Main Certificates Page */
+
+.certificates-page {
+  min-height: 100vh;
+  padding: 40px 25px;
+  background: #f4f7f6;
+  font-family: "Poppins", sans-serif;
+}
+
+
+/* Page Heading */
+
+.certificates-page > h2 {
+  text-align: center;
+  font-size: 36px;
+  color: #065f46;
+  margin-bottom: 35px;
+}
+
+
+/* Certificate Card */
+
+.certificate-card {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto 45px;
+}
+
+
+/* Certificate Preview */
+
+.certificate-preview {
+  width: 100%;
+  box-sizing: border-box;
+  background: white;
+  padding: 18px;
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+
+/* Main Certificate */
+
+.certificate-border {
+  position: relative;
+  min-height: 500px;
+  box-sizing: border-box;
+
+  padding: 65px 70px;
+
+  text-align: center;
+
+  background: #fffdf7;
+
+  border: 10px solid #065f46;
+}
+
+
+/* Inner Gold Border */
+
+.certificate-border::before {
+  content: "";
+
+  position: absolute;
+
+  top: 18px;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+
+  border: 3px solid #d4af37;
+
+  pointer-events: none;
+}
+
+
+/* Certificate Heading */
+
+.certificate-border h1 {
+  position: relative;
+
+  margin: 25px 0 30px;
+
+  font-family: Georgia, serif;
+
+  font-size: 42px;
+
+  color: #065f46;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+}
+
+
+/* Small Text */
+
+.certificate-text {
+  position: relative;
+
+  font-size: 19px;
+
+  color: #555;
+
+  margin: 12px 0;
+}
+
+
+/* Volunteer Name */
+
+.certificate-border h2 {
+  position: relative;
+
+  margin: 20px 0;
+
+  font-family: Georgia, serif;
+
+  font-size: 38px;
+
+  color: #222;
+
+  border-bottom: 2px solid #d4af37;
+
+  display: inline-block;
+
+  padding: 0 35px 8px;
+}
+
+
+/* Event Name */
+
+.certificate-border h3 {
+  position: relative;
+
+  margin: 20px 0;
+
+  font-size: 28px;
+
+  color: #00695c;
+
+  font-weight: 600;
+}
+
+
+/* Certificate Number + Date */
+
+.certificate-border p:not(.certificate-text) {
+  position: relative;
+
+  font-size: 16px;
+
+  color: #444;
+
+  margin: 12px 0;
+}
+
+
+/* Footer */
+
+.certificate-footer {
+  position: relative;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-end;
+
+  margin-top: 45px;
+
+  padding: 0 35px;
+
+  font-size: 15px;
+
+  color: #333;
+}
+
+
+.certificate-footer span {
+  border-top: 1px solid #555;
+
+  padding-top: 8px;
+
+  min-width: 150px;
+}
+
+
+/* Download Button */
+
+.download-btn {
+  display: block;
+
+  width: 230px;
+
+  margin: 20px auto 0;
+
+  padding: 13px 20px;
+
+  background: #065f46;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 8px;
+
+  font-size: 17px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+
+.download-btn:hover {
+  background: #004d40;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.18);
+}
+
+
+/* No Certificate */
+
+.no-certificate {
+  max-width: 600px;
+
+  margin: 80px auto;
+
+  padding: 40px;
+
+  text-align: center;
+
+  background: white;
+
+  border-radius: 12px;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+
+.no-certificate h3 {
+  color: #065f46;
+
+  font-size: 25px;
+}
+
+
+.no-certificate p {
+  color: #666;
+
+  font-size: 16px;
+}
+
+
+/* Responsive */
+
+@media (max-width: 900px) {
+
+  .certificate-preview {
+    padding: 10px;
+  }
+
+  .certificate-border {
+    padding: 50px 35px;
+  }
+
+  .certificate-border h1 {
+    font-size: 32px;
+  }
+
+  .certificate-border h2 {
+    font-size: 30px;
+  }
+
+  .certificate-border h3 {
+    font-size: 24px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .certificates-page {
+    padding: 25px 10px;
+  }
+
+  .certificate-border {
+    padding: 45px 20px;
+    min-height: 450px;
+  }
+
+  .certificate-border h1 {
+    font-size: 25px;
+  }
+
+  .certificate-border h2 {
+    font-size: 25px;
+  }
+
+  .certificate-border h3 {
+    font-size: 20px;
+  }
+
+  .certificate-text {
+    font-size: 15px;
+  }
+
+  .certificate-footer {
+    flex-direction: column;
+    gap: 25px;
+    align-items: center;
+  }
+
+}

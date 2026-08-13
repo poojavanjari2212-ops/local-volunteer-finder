@@ -1,0 +1,46 @@
+.view-volunteers-page {
+  padding: 30px 40px;
+  background: #f5f7fb;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.view-volunteers-page h2 {
+  color: #0b5d3f;
+  margin-bottom: 5px;
+}
+
+.view-volunteers-page p {
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.view-volunteers-page table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.view-volunteers-page th,
+.view-volunteers-page td {
+  padding: 15px 22px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.view-volunteers-page th {
+  background: #0b5d3f;
+  color: #fff;
+}
+
+.view-volunteers-page tr:hover {
+  background: #f9f9f9;
+}
+
+.view-volunteers-page tbody tr:last-child td {
+  border-bottom: none;
+}

@@ -1,0 +1,77 @@
+.add-event-container{
+
+    min-height:100vh;
+    padding:40px;
+    background:#f5f7fb;
+
+}
+
+
+.add-event-container h1{
+
+    color:#065f46;
+    margin-bottom:25px;
+
+}
+
+
+
+.add-event-form{
+
+    width:600px;
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.1);
+
+}
+
+
+
+.add-event-form input,
+.add-event-form textarea{
+
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+
+    border:1px solid #ddd;
+    border-radius:8px;
+
+    font-size:15px;
+
+}
+
+
+
+.add-event-form textarea{
+
+    height:120px;
+    resize:none;
+
+}
+
+
+
+.add-event-form button{
+
+    background:#065f46;
+    color:white;
+
+    border:none;
+    padding:12px 30px;
+
+    border-radius:8px;
+
+    font-size:16px;
+    cursor:pointer;
+
+}
+
+
+
+.add-event-form button:hover{
+
+    background:#047857;
+
+}

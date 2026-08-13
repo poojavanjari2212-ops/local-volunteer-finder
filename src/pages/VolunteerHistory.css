@@ -1,0 +1,118 @@
+.history-page {
+  min-height: 100vh;
+  background: #f5f7fb;
+  padding: 30px 40px;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Header */
+
+.history-page h2 {
+  font-size: 30px;
+  color: #0b5d3f;
+  margin: 0 0 8px;
+}
+
+.history-page > p {
+  color: #666;
+  font-size: 16px;
+  margin: 0 0 30px;
+}
+
+/* History Cards */
+
+.history-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+/* Card */
+
+.history-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eef1ef;
+  transition: 0.3s ease;
+  min-height: 150px;
+  box-sizing: border-box;
+}
+
+.history-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+}
+
+/* Event Title */
+
+.history-card h3 {
+  color: #0b5d3f;
+  margin: 0 0 15px;
+  font-size: 20px;
+}
+
+/* Volunteer Hours */
+
+.history-card p {
+  color: #555;
+  font-size: 15px;
+  margin: 10px 0;
+}
+
+/* Completed */
+
+.history-card span {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 7px 16px;
+  background: #dcfce7;
+  color: #15803d;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Empty Box */
+
+.history-page .empty-box {
+  background: #fff;
+  padding: 45px;
+  text-align: center;
+  border-radius: 15px;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.07);
+  border: 1px solid #eef1ef;
+}
+
+.history-page .empty-box h3 {
+  color: #0b5d3f;
+  margin-bottom: 10px;
+}
+
+.history-page .empty-box p {
+  color: #666;
+}
+
+/* Responsive */
+
+@media (max-width: 1000px) {
+  .history-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 650px) {
+  .history-page {
+    padding: 20px;
+  }
+
+  .history-container {
+    grid-template-columns: 1fr;
+  }
+
+  .history-page h2 {
+    font-size: 26px;
+  }
+}
