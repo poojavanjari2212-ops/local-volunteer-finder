@@ -4,91 +4,60 @@ import { FaHandsHelping, FaBars, FaTimes } from "react-icons/fa";
 import "./Navbar.css";
 
 function Navbar() {
-
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
   return (
-
     <header className="navbar">
-
-
-      <div className="logo">
-
+      <Link to="/" className="logo" onClick={closeMenu}>
         <FaHandsHelping className="logo-icon" />
 
-        <div>
+        <div className="logo-text">
           <h2>Volunteer Finder</h2>
           <span>Helping Communities Together</span>
         </div>
+      </Link>
 
-      </div>
-
-
-
-      <ul className={menuOpen ? "nav-links active" : "nav-links"}>
-
-
+      <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
         <li>
-          <Link to="/">
-            Home
-          </Link>
+          <Link to="/" onClick={closeMenu}>Home</Link>
         </li>
 
-
         <li>
-          <Link to="/events">
-            Events
-          </Link>
+          <Link to="/events" onClick={closeMenu}>Events</Link>
         </li>
 
-
         <li>
-          <Link to="/about">
-            About
-          </Link>
+          <Link to="/about" onClick={closeMenu}>About</Link>
         </li>
 
-
         <li>
-          <Link to="/contact">
-            Contact
-          </Link>
+          <Link to="/contact" onClick={closeMenu}>Contact</Link>
         </li>
 
-
         <li>
-          <Link to="/login" className="login-btn">
+          <Link
+            to="/login"
+            className="login-btn"
+            onClick={closeMenu}
+          >
             Login
           </Link>
         </li>
-
-
       </ul>
 
-
-
-
-      <div
+      <button
         className="menu-icon"
         onClick={() => setMenuOpen(!menuOpen)}
+        aria-label="Toggle navigation menu"
       >
-
-        {
-          menuOpen
-          ?
-          <FaTimes />
-          :
-          <FaBars />
-        }
-
-      </div>
-
-
+        {menuOpen ? <FaTimes /> : <FaBars />}
+      </button>
     </header>
-
   );
-
 }
-
 
 export default Navbar;
