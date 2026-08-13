@@ -10,6 +10,8 @@ import {
   FaUsers,
   FaUser,
   FaSignOutAlt,
+  FaBars,
+  FaTimes,
 } from "react-icons/fa";
 
 const API = "http://localhost:5000/api";
@@ -17,8 +19,10 @@ const API = "http://localhost:5000/api";
 const NGODashboard = () => {
   const navigate = useNavigate();
 
-  // ================= STATES =================
+  // ================= MOBILE MENU =================
+  const [menuOpen, setMenuOpen] = useState(false);
 
+  // ================= DASHBOARD STATES =================
   const [totalEvents, setTotalEvents] = useState(0);
   const [activeEvents, setActiveEvents] = useState(0);
   const [totalVolunteers, setTotalVolunteers] = useState(0);
@@ -27,14 +31,27 @@ const NGODashboard = () => {
   const [allEvents, setAllEvents] = useState([]);
   const [registrations, setRegistrations] = useState([]);
 
-  // ================= LOGOUT =================
+  // =====================================================
+  // LOGOUT
+  // =====================================================
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    setMenuOpen(false);
     navigate("/login");
   };
 
-  // ================= GET EVENT ID =================
+  // =====================================================
+  // CLOSE MOBILE MENU
+  // =====================================================
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
+  // =====================================================
+  // GET EVENT ID FROM REGISTRATION
+  // =====================================================
 
   const getEventId = (registration) => {
     if (!registration) return "";
@@ -58,14 +75,16 @@ const NGODashboard = () => {
     return "";
   };
 
-  // ================= FETCH DASHBOARD DATA =================
+  // =====================================================
+  // FETCH DASHBOARD DATA
+  // =====================================================
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // =====================================================
-        // 1. GET EVENTS
-        // =====================================================
+        // =================================================
+        // GET EVENTS
+        // =================================================
 
         const eventResponse = await axios.get(`${API}/events`);
 
@@ -78,19 +97,36 @@ const NGODashboard = () => {
 
         console.log("EVENTS:", events);
 
-        // =====================================================
-        // 2. GET REGISTRATIONS
-        // =====================================================
+        // =================================================
+        // GET REGISTRATIONS
+        // =================================================
 
-        const registrationResponse = await axios.get(
-          `${API}/registrations`
-        );
+        let registrationsData = [];
 
-        const registrationsData = Array.isArray(
-          registrationResponse.data?.registrations
-        )
-          ? registrationResponse.data.registrations
-          : [];
+        try {
+          const registrationResponse = await axios.get(
+            `${API}/registrations`
+          );
+
+          if (
+            Array.isArray(
+              registrationResponse.data?.registrations
+            )
+          ) {
+            registrationsData =
+              registrationResponse.data.registrations;
+          } else if (Array.isArray(registrationResponse.data)) {
+            registrationsData = registrationResponse.data;
+          }
+        } catch (registrationError) {
+          console.log(
+            "REGISTRATION API ERROR:",
+            registrationError.response?.data ||
+              registrationError.message
+          );
+
+          registrationsData = [];
+        }
 
         setRegistrations(registrationsData);
 
@@ -99,9 +135,9 @@ const NGODashboard = () => {
           registrationsData
         );
 
-        // =====================================================
-        // 3. ONLY REGISTRATIONS BELONGING TO EXISTING EVENTS
-        // =====================================================
+        // =================================================
+        // VALID REGISTRATIONS
+        // =================================================
 
         const existingEventIds = new Set(
           events.map((event) => String(event._id))
@@ -119,15 +155,9 @@ const NGODashboard = () => {
           validRegistrations
         );
 
-        // =====================================================
-        // 4. TOTAL VOLUNTEERS
-        // =====================================================
-
-        // Joined किंवा Completed असलेली प्रत्येक registration
-        // = 1 volunteer
-        //
-        // Completed झाल्यावर तो Joined मध्ये पुन्हा count
-        // होत नाही कारण status आता Completed आहे.
+        // =================================================
+        // TOTAL VOLUNTEERS
+        // =================================================
 
         const joinedOrCompleted =
           validRegistrations.filter((registration) => {
@@ -141,19 +171,18 @@ const NGODashboard = () => {
             );
           });
 
-        const totalVolunteerCount =
-          joinedOrCompleted.length;
-
-        setTotalVolunteers(totalVolunteerCount);
+        setTotalVolunteers(
+          joinedOrCompleted.length
+        );
 
         console.log(
           "TOTAL VOLUNTEERS:",
-          totalVolunteerCount
+          joinedOrCompleted.length
         );
 
-        // =====================================================
-        // 5. TOTAL COMPLETED VOLUNTEERS
-        // =====================================================
+        // =================================================
+        // COMPLETED VOLUNTEERS
+        // =================================================
 
         const completedVolunteerCount =
           validRegistrations.filter((registration) => {
@@ -173,25 +202,21 @@ const NGODashboard = () => {
           completedVolunteerCount
         );
 
-        // =====================================================
-        // 6. FIND COMPLETED EVENTS
-        // =====================================================
+        // =================================================
+        // ACTIVE / COMPLETED EVENTS
+        // =================================================
 
         let completedEventCount = 0;
 
         events.forEach((event) => {
           const eventId = String(event._id);
 
-          // This event's registrations
           const eventRegistrations =
             validRegistrations.filter((registration) => {
-              return getEventId(registration) === eventId;
+              return (
+                getEventId(registration) === eventId
+              );
             });
-
-          // जर registration नाही तर event Completed नाही
-          if (eventRegistrations.length === 0) {
-            return;
-          }
 
           const completedCount =
             eventRegistrations.filter((registration) => {
@@ -202,45 +227,51 @@ const NGODashboard = () => {
               );
             }).length;
 
-          const totalCount =
+          const totalRegistered =
             eventRegistrations.length;
 
-          console.log(
-            "EVENT CHECK:",
-            event.title,
-            {
-              totalVolunteers: totalCount,
-              completedVolunteers: completedCount,
-            }
-          );
+          /*
+            Event completed when all registered volunteers
+            are completed.
 
-          // ALL registered volunteers completed
+            If backend already has status = Completed,
+            that is also considered completed.
+          */
+
+          const backendCompleted =
+            String(event.status || "").toLowerCase() ===
+            "completed";
+
+          const allVolunteersCompleted =
+            totalRegistered > 0 &&
+            completedCount === totalRegistered;
+
           if (
-            totalCount > 0 &&
-            completedCount === totalCount
+            backendCompleted ||
+            allVolunteersCompleted
           ) {
             completedEventCount++;
           }
         });
+
+        const activeEventCount =
+          events.length - completedEventCount;
+
+        setActiveEvents(
+          activeEventCount > 0
+            ? activeEventCount
+            : 0
+        );
 
         console.log(
           "COMPLETED EVENTS:",
           completedEventCount
         );
 
-        // =====================================================
-        // 7. ACTIVE EVENTS
-        // =====================================================
-
-        const activeEventCount =
-          events.length - completedEventCount;
-
-        setActiveEvents(
-          activeEventCount < 0
-            ? 0
-            : activeEventCount
+        console.log(
+          "ACTIVE EVENTS:",
+          activeEventCount
         );
-
       } catch (error) {
         console.log(
           "NGO DASHBOARD ERROR:",
@@ -253,317 +284,444 @@ const NGODashboard = () => {
     fetchDashboardData();
   }, []);
 
-  // ================= UI =================
+  // =====================================================
+  // UI
+  // =====================================================
 
   return (
     <div className="dashboard-container">
 
-      {/* ================= SIDEBAR ================= */}
+      {/* =================================================
+          SIDEBAR
+          ================================================= */}
 
-      <div className="sidebar">
+      <aside
+        className={`sidebar ${
+          menuOpen ? "menu-open" : ""
+        }`}
+      >
 
-        <h3>🌿 NGO</h3>
+        {/* ================= HEADER ================= */}
 
-        <ul>
+        <div className="sidebar-header">
 
-          <li>
+          <h3>
+            🌿 NGO
+          </h3>
+
+          {/* MOBILE BUTTON ONLY */}
+
+          <button
+            type="button"
+            className="mobile-menu-btn"
+            onClick={() =>
+              setMenuOpen((prev) => !prev)
+            }
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? (
+              <FaTimes />
+            ) : (
+              <FaBars />
+            )}
+          </button>
+
+        </div>
+
+        {/* ================= NAVIGATION ================= */}
+
+        <ul className="sidebar-menu">
+
+          {/* DASHBOARD */}
+
+          <li
+            className="active-menu"
+            onClick={closeMenu}
+          >
             <FaTachometerAlt />
-            Dashboard
+
+            <span>
+              Dashboard
+            </span>
           </li>
 
-          <li>
+          {/* ADD EVENT */}
+
+          <li onClick={closeMenu}>
             <Link to="/add-event">
+
               <FaPlusCircle />
-              Add Event
+
+              <span>
+                Add Event
+              </span>
+
             </Link>
           </li>
 
-          <li>
+          {/* MANAGE EVENTS */}
+
+          <li onClick={closeMenu}>
             <Link to="/manage-events">
+
               <FaTasks />
-              Manage Events
+
+              <span>
+                Manage Events
+              </span>
+
             </Link>
           </li>
 
-          <li>
+          {/* VIEW VOLUNTEERS */}
+
+          <li onClick={closeMenu}>
             <Link to="/view-volunteers">
+
               <FaUsers />
-              View Volunteers
+
+              <span>
+                View Volunteers
+              </span>
+
             </Link>
           </li>
 
-          <li>
+          {/* PROFILE */}
+
+          <li onClick={closeMenu}>
             <Link to="/ngo-profile">
+
               <FaUser />
-              Profile
+
+              <span>
+                Profile
+              </span>
+
             </Link>
           </li>
+
+          {/* LOGOUT */}
 
           <li onClick={handleLogout}>
+
             <FaSignOutAlt />
-            Logout
+
+            <span>
+              Logout
+            </span>
+
           </li>
 
         </ul>
 
-      </div>
+      </aside>
 
-      {/* ================= MAIN CONTENT ================= */}
+      {/* =================================================
+          MAIN CONTENT
+          ================================================= */}
 
-      <div className="dashboard-content">
+      <main className="dashboard-content">
 
-        <h1>
-          Welcome, Green Earth NGO 🌱
-        </h1>
+        {/* ================= WELCOME ================= */}
 
-        <p>
-          Manage your events and volunteers
-          efficiently.
-        </p>
+        <div className="welcome-section">
 
-        {/* ================= STATS ================= */}
+          <h1>
+            Welcome, Green Earth NGO 🌱
+          </h1>
+
+          <p>
+            Manage your events and volunteers
+            efficiently.
+          </p>
+
+        </div>
+
+        {/* =================================================
+            STATISTICS
+            ================================================= */}
 
         <div className="stats">
 
           {/* TOTAL EVENTS */}
 
           <div className="stat-card">
-            <h4>Total Events</h4>
-            <h2>{totalEvents}</h2>
+
+            <h4>
+              Total Events
+            </h4>
+
+            <h2>
+              {totalEvents}
+            </h2>
+
           </div>
 
           {/* ACTIVE EVENTS */}
 
           <div className="stat-card">
-            <h4>Active Events</h4>
-            <h2>{activeEvents}</h2>
+
+            <h4>
+              Active Events
+            </h4>
+
+            <h2>
+              {activeEvents}
+            </h2>
+
           </div>
 
-          {/* TOTAL VOLUNTEERS */}
+          {/* VOLUNTEERS */}
 
           <div className="stat-card">
-            <h4>Volunteers</h4>
-            <h2>{totalVolunteers}</h2>
+
+            <h4>
+              Volunteers
+            </h4>
+
+            <h2>
+              {totalVolunteers}
+            </h2>
+
           </div>
 
-          {/* COMPLETED VOLUNTEERS */}
+          {/* COMPLETED */}
 
           <div className="stat-card">
-            <h4>Completed</h4>
-            <h2>{completedVolunteers}</h2>
+
+            <h4>
+              Completed
+            </h4>
+
+            <h2>
+              {completedVolunteers}
+            </h2>
+
           </div>
 
         </div>
 
-        {/* ================= BOTTOM ================= */}
+        {/* =================================================
+            BOTTOM SECTION
+            ================================================= */}
 
         <div className="dashboard-bottom">
 
-          {/* ================= RECENT EVENTS ================= */}
+          {/* =================================================
+              RECENT EVENTS
+              ================================================= */}
 
-          <div className="events-box">
+          <section className="events-box">
 
-            <h3>Recent Events</h3>
+            <h3>
+              Recent Events
+            </h3>
 
             {allEvents.length === 0 ? (
 
-              <p>No events added yet.</p>
+              <div className="empty-events">
+                No events added yet.
+              </div>
 
             ) : (
 
-              allEvents.map((event, index) => {
+              allEvents
+                .slice()
+                .reverse()
+                .slice(0, 5)
+                .map((event, index) => {
 
-                const eventId =
-                  String(event._id);
+                  const eventId =
+                    String(event._id);
 
-                // =================================================
-                // GET THIS EVENT'S REGISTRATIONS
-                // =================================================
-
-                const eventRegistrations =
-                  registrations.filter(
-                    (registration) => {
-
-                      return (
+                  const eventRegistrations =
+                    registrations.filter(
+                      (registration) =>
                         getEventId(
                           registration
                         ) === eventId
-                      );
-                    }
-                  );
+                    );
 
-                // =================================================
-                // TOTAL VOLUNTEERS FOR THIS EVENT
-                // =================================================
+                  const eventVolunteerCount =
+                    Number(event.volunteers) || 0;
 
-const eventVolunteerCount =
-  Number(event.volunteers) || 0;
-
-                // =================================================
-                // COMPLETED VOLUNTEERS
-                // =================================================
-
-                const eventCompletedCount =
-                  eventRegistrations.filter(
-                    (registration) => {
-
-                      return (
+                  const eventCompletedCount =
+                    eventRegistrations.filter(
+                      (registration) =>
                         String(
-                          registration.status ||
-                            ""
+                          registration.status || ""
                         ).toLowerCase() ===
                         "completed"
-                      );
-                    }
-                  ).length;
+                    ).length;
 
-                // =================================================
-                // JOINED VOLUNTEERS
-                // =================================================
-
-                const eventJoinedCount =
-                  eventRegistrations.filter(
-                    (registration) => {
-
-                      return (
+                  const eventJoinedCount =
+                    eventRegistrations.filter(
+                      (registration) =>
                         String(
-                          registration.status ||
-                            ""
+                          registration.status || ""
                         ).toLowerCase() ===
                         "joined"
-                      );
-                    }
-                  ).length;
+                    ).length;
 
-                // =================================================
-                // EVENT COMPLETED?
-                // =================================================
+                  const backendCompleted =
+                    String(
+                      event.status || ""
+                    ).toLowerCase() ===
+                    "completed";
 
-                const isCompleted =
-                  eventVolunteerCount > 0 &&
-                  eventCompletedCount ===
-                    eventVolunteerCount;
+                  const isCompleted =
+                    backendCompleted ||
+                    (
+                      eventVolunteerCount > 0 &&
+                      eventCompletedCount >=
+                        eventVolunteerCount
+                    );
 
-                // =================================================
-                // STATUS TEXT
-                // =================================================
+                  let statusText =
+                    "Active";
 
-                let statusText = "No Volunteers";
-
-                if (eventVolunteerCount > 0) {
                   if (isCompleted) {
                     statusText = "Completed";
-                  } else {
-                    statusText = "Joined";
                   }
-                }
 
-                return (
-
-                  <div
-                    className="dashboard-event-card"
-                    key={
-                      event._id || index
-                    }
-                  >
-
-                    {/* IMAGE */}
-
-                    <img
-                      src={
-                        event.image
-                          ? event.image
-                          : "/default-event.jpg"
+                  return (
+                    <div
+                      className="dashboard-event-card"
+                      key={
+                        event._id || index
                       }
-                      alt={event.title}
-                    />
+                    >
 
-                    {/* EVENT INFO */}
+                      {/* IMAGE */}
 
-                    <div>
+                      <img
+                        src={
+                          event.image ||
+                          "/default-event.jpg"
+                        }
+                        alt={
+                          event.title ||
+                          "Event"
+                        }
+                        onError={(e) => {
+                          e.currentTarget.src =
+                            "/default-event.jpg";
+                        }}
+                      />
 
-                      <h4>
-                        {event.title}
-                      </h4>
+                      {/* INFO */}
 
-                      <p>
-                        {event.date}
-                      </p>
+                      <div className="event-info">
 
-                      {/* TOTAL VOLUNTEERS */}
+                        <h4>
+                          {event.title ||
+                            "Untitled Event"}
+                        </h4>
 
-                      <p>
-                        👥{" "}
-                        {eventVolunteerCount}{" "}
-                        Volunteer
-                        {eventVolunteerCount !== 1
-                          ? "s"
-                          : ""}
-                      </p>
+                        <p>
+                          📅{" "}
+                          {event.date ||
+                            "Date not available"}
+                        </p>
 
-                      {/* JOINED */}
+                        <p>
+                          📍{" "}
+                          {event.location ||
+                            "Location not available"}
+                        </p>
 
-                      {!isCompleted &&
-                        eventJoinedCount > 0 && (
-                          <p>
+                        <p>
+                          👥{" "}
+                          {eventVolunteerCount}{" "}
+                          Volunteer
+                          {eventVolunteerCount !== 1
+                            ? "s"
+                            : ""}
+                        </p>
+
+                        {eventJoinedCount >
+                          0 && (
+                          <p className="joined-text">
                             🟢{" "}
                             {eventJoinedCount}{" "}
                             Joined
                           </p>
                         )}
 
-                      {/* COMPLETED */}
+                        {eventCompletedCount >
+                          0 && (
+                          <p className="completed-text">
+                            ✅{" "}
+                            {eventCompletedCount}{" "}
+                            Completed
+                          </p>
+                        )}
 
-                      {eventCompletedCount > 0 && (
-                        <p>
-                          ✅{" "}
-                          {eventCompletedCount}{" "}
-                          Completed
-                        </p>
-                      )}
+                      </div>
+
+                      {/* STATUS */}
+
+                      <span
+                        className={
+                          isCompleted
+                            ? "event-status completed"
+                            : "event-status active"
+                        }
+                      >
+                        {statusText}
+                      </span>
 
                     </div>
-
-                    {/* STATUS */}
-
-                    <span>
-                      {statusText}
-                    </span>
-
-                  </div>
-
-                );
-              })
+                  );
+                })
 
             )}
 
-          </div>
+          </section>
 
-          {/* ================= QUICK ACTIONS ================= */}
+          {/* =================================================
+              QUICK ACTIONS
+              ================================================= */}
 
-          <div className="badges-box">
+          <section className="badges-box">
 
             <h3>
               Quick Actions
             </h3>
 
-            <div className="badge">
+            <button
+              className="badge"
+              onClick={() =>
+                navigate("/add-event")
+              }
+            >
               ➕ Create New Event
-            </div>
+            </button>
 
-            <div className="badge">
+            <button
+              className="badge"
+              onClick={() =>
+                navigate("/view-volunteers")
+              }
+            >
               👥 View Volunteers
-            </div>
+            </button>
 
-            <div className="badge">
-              📊 Generate Report
-            </div>
+            <button
+              className="badge"
+              onClick={() =>
+                navigate("/manage-events")
+              }
+            >
+              📋 Manage Events
+            </button>
 
-          </div>
+          </section>
 
         </div>
 
-      </div>
+      </main>
 
     </div>
   );
