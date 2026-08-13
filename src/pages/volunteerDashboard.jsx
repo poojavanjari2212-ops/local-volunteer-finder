@@ -9,14 +9,23 @@ import {
   FaHistory,
   FaCertificate,
   FaUser,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaBars,
+  FaTimes,
 } from "react-icons/fa";
+
+const API = "http://localhost:5000/api";
 
 const VolunteerDashboard = () => {
   const navigate = useNavigate();
 
-  const user =
-    JSON.parse(localStorage.getItem("user")) || null;
+  const user = JSON.parse(localStorage.getItem("user")) || null;
+
+  // ================= MOBILE MENU =================
+
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // ================= STATES =================
 
   const [joinedEvents, setJoinedEvents] = useState([]);
   const [eventDetails, setEventDetails] = useState({});
@@ -26,7 +35,7 @@ const VolunteerDashboard = () => {
   // ================= FETCH DATA =================
 
   useEffect(() => {
-    const fetchRegistrations = async () => {
+    const fetchDashboardData = async () => {
       try {
         if (!user) {
           setJoinedEvents([]);
@@ -37,51 +46,35 @@ const VolunteerDashboard = () => {
         // ================= REGISTRATIONS =================
 
         const registrationResponse = await axios.get(
-          "http://localhost:5000/api/registrations"
+          `${API}/registrations`
         );
 
         const allRegistrations =
-          registrationResponse.data.registrations || [];
+          registrationResponse.data?.registrations || [];
 
-        console.log(
-          "ALL REGISTRATIONS:",
-          allRegistrations
-        );
-
-        console.log(
-          "LOGGED USER:",
-          user
-        );
-
-        console.log(
-          "LOGGED USER EMAIL:",
-          user?.email
-        );
+        console.log("ALL REGISTRATIONS:", allRegistrations);
+        console.log("LOGGED USER:", user);
+        console.log("LOGGED USER EMAIL:", user?.email);
 
         // ================= MY REGISTRATIONS =================
 
-const myRegistrations = allRegistrations.filter(
-  (registration) => {
-    const registrationEmail = String(
-      registration.volunteerId || ""
-    ).trim().toLowerCase();
+        const loggedInEmail = String(user.email || "")
+          .trim()
+          .toLowerCase();
 
-    const loggedInEmail = String(
-      user.email || ""
-    ).trim().toLowerCase();
+        const myRegistrations = allRegistrations.filter(
+          (registration) => {
+            const registrationEmail = String(
+              registration.volunteerId || ""
+            )
+              .trim()
+              .toLowerCase();
 
-    return registrationEmail === loggedInEmail;
-  }
-);
-
-console.log("LOGGED IN EMAIL:", user.email);
-console.log("ALL REGISTRATIONS:", allRegistrations);
-console.log("MY REGISTRATIONS:", myRegistrations);
-
-        console.log(
-          "MY REGISTRATIONS:",
-          myRegistrations
+            return registrationEmail === loggedInEmail;
+          }
         );
+
+        console.log("MY REGISTRATIONS:", myRegistrations);
 
         setJoinedEvents(myRegistrations);
 
@@ -91,7 +84,6 @@ console.log("MY REGISTRATIONS:", myRegistrations);
 
         for (const registration of myRegistrations) {
           try {
-            // eventId string किंवा object दोन्ही handle करा
             const eventId =
               typeof registration.eventId === "object"
                 ? registration.eventId?._id
@@ -106,22 +98,15 @@ console.log("MY REGISTRATIONS:", myRegistrations);
             }
 
             const eventResponse = await axios.get(
-              `http://localhost:5000/api/events/${eventId}`
+              `${API}/events/${eventId}`
             );
 
-            console.log(
-              "EVENT DETAILS:",
-              eventResponse.data
-            );
-
-            details[eventId] =
-              eventResponse.data;
+            details[eventId] = eventResponse.data;
 
           } catch (error) {
             console.log(
               "EVENT DETAILS ERROR:",
-              error.response?.data ||
-                error.message
+              error.response?.data || error.message
             );
           }
         }
@@ -130,112 +115,173 @@ console.log("MY REGISTRATIONS:", myRegistrations);
 
         // ================= CERTIFICATES =================
 
-        const certificateResponse = await axios.get(
-          "http://localhost:5000/api/certificates"
-        );
+        try {
+          const certificateResponse = await axios.get(
+            `${API}/certificates`
+          );
 
-        const allCertificates =
-          certificateResponse.data.certificates || [];
+          const allCertificates =
+            certificateResponse.data?.certificates || [];
 
-        const myCertificates =
-          allCertificates.filter(
+          const myCertificates = allCertificates.filter(
             (certificate) =>
               String(certificate.volunteerId || "")
                 .trim()
-                .toLowerCase() ===
-              String(user?.email || "")
-                .trim()
-                .toLowerCase()
+                .toLowerCase() === loggedInEmail
           );
 
-        console.log(
-          "MY CERTIFICATES:",
-          myCertificates
-        );
+          console.log(
+            "MY CERTIFICATES:",
+            myCertificates
+          );
 
-        setCertificateCount(
-          myCertificates.length
-        );
+          setCertificateCount(myCertificates.length);
+
+        } catch (certificateError) {
+          console.log(
+            "CERTIFICATE ERROR:",
+            certificateError.response?.data ||
+              certificateError.message
+          );
+
+          setCertificateCount(0);
+        }
 
         setLoadingEvents(false);
 
       } catch (error) {
         console.log(
           "DASHBOARD ERROR:",
-          error.response?.data ||
-            error.message
+          error.response?.data || error.message
         );
 
         setLoadingEvents(false);
       }
     };
 
-    fetchRegistrations();
-
+    fetchDashboardData();
   }, [user?.email]);
 
   // ================= LOGOUT =================
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    setMenuOpen(false);
     navigate("/login");
+  };
+
+  // ================= CLOSE MOBILE MENU =================
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
+  // ================= NAVIGATION =================
+
+  const goTo = (path) => {
+    setMenuOpen(false);
+    navigate(path);
   };
 
   // ================= UI =================
 
   return (
-    <div className="dashboard-container">
+    <div className="volunteer-dashboard">
 
-      {/* ================= SIDEBAR ================= */}
+      {/* =====================================================
+          SIDEBAR
+      ===================================================== */}
 
-      <aside className="sidebar">
+      <aside
+        className={`volunteer-sidebar ${
+          menuOpen ? "mobile-open" : ""
+        }`}
+      >
 
-        <h3>
-          🤝 Volunteer
-        </h3>
+        {/* ================= SIDEBAR HEADER ================= */}
 
-        <ul>
+        <div className="volunteer-sidebar-header">
 
-          <li>
+          <h3>
+            🤝 Volunteer
+          </h3>
+
+          {/* MOBILE HAMBURGER */}
+
+          <button
+            type="button"
+            className="volunteer-menu-btn"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle navigation"
+          >
+            {menuOpen ? <FaTimes /> : <FaBars />}
+          </button>
+
+        </div>
+
+        {/* =====================================================
+            NAVIGATION
+        ===================================================== */}
+
+        <ul className="volunteer-sidebar-menu">
+
+          {/* DASHBOARD */}
+
+          <li
+            className="active"
+            onClick={() =>
+              goTo("/volunteer-dashboard")
+            }
+          >
             <FaTachometerAlt />
             <span>Dashboard</span>
           </li>
 
+          {/* MY REGISTRATIONS */}
+
           <li
             onClick={() =>
-              navigate("/registrations")
+              goTo("/registrations")
             }
           >
             <FaClipboardList />
             <span>My Registrations</span>
           </li>
 
+          {/* HISTORY */}
+
           <li
             onClick={() =>
-              navigate("/history")
+              goTo("/history")
             }
           >
             <FaHistory />
             <span>Volunteer History</span>
           </li>
 
+          {/* CERTIFICATES */}
+
           <li
             onClick={() =>
-              navigate("/certificates")
+              goTo("/certificates")
             }
           >
             <FaCertificate />
             <span>Certificates</span>
           </li>
 
+          {/* PROFILE */}
+
           <li
             onClick={() =>
-              navigate("/profile")
+              goTo("/profile")
             }
           >
             <FaUser />
             <span>Profile</span>
           </li>
+
+          {/* LOGOUT */}
 
           <li onClick={handleLogout}>
             <FaSignOutAlt />
@@ -246,69 +292,119 @@ console.log("MY REGISTRATIONS:", myRegistrations);
 
       </aside>
 
-      {/* ================= MAIN CONTENT ================= */}
+      {/* =====================================================
+          MAIN CONTENT
+      ===================================================== */}
 
-      <main className="dashboard-content">
+      <main className="volunteer-dashboard-content">
 
-        <h2>
-          Welcome, {user?.name || "Volunteer"} 👋
-        </h2>
+        {/* ================= WELCOME ================= */}
 
-        <p>
-          Thank you for being a changemaker.
-        </p>
+        <section className="volunteer-welcome">
 
-        {/* ================= STATS ================= */}
+          <h1>
+            Welcome, {user?.name || "Volunteer"} 👋
+          </h1>
 
-        <div className="stats">
+          <p>
+            Thank you for being a changemaker.
+          </p>
+
+        </section>
+
+        {/* =====================================================
+            STATS
+        ===================================================== */}
+
+        <section className="volunteer-stats">
 
           {/* JOINED EVENTS */}
 
-          <div className="stat-card">
-            <h4>Joined Events</h4>
+          <div className="volunteer-stat-card">
 
-            <h2>
-              {joinedEvents.length}
-            </h2>
+            <div className="stat-icon joined-icon">
+              📅
+            </div>
+
+            <div>
+              <h4>Joined Events</h4>
+
+              <h2>
+                {joinedEvents.length}
+              </h2>
+            </div>
+
           </div>
 
           {/* CERTIFICATES */}
 
-          <div className="stat-card">
-            <h4>Certificates</h4>
+          <div className="volunteer-stat-card">
 
-            <h2>
-              {certificateCount}
-            </h2>
+            <div className="stat-icon certificate-icon">
+              🏆
+            </div>
+
+            <div>
+              <h4>Certificates</h4>
+
+              <h2>
+                {certificateCount}
+              </h2>
+            </div>
+
           </div>
 
           {/* BADGES */}
 
-          <div className="stat-card">
-            <h4>Badges</h4>
+          <div className="volunteer-stat-card">
 
-            <h2>
-              5
-            </h2>
+            <div className="stat-icon badge-icon">
+              ⭐
+            </div>
+
+            <div>
+              <h4>Badges</h4>
+
+              <h2>
+                5
+              </h2>
+            </div>
+
           </div>
 
-        </div>
+        </section>
 
-        {/* ================= BOTTOM ================= */}
+        {/* =====================================================
+            BOTTOM SECTION
+        ===================================================== */}
 
-        <div className="dashboard-bottom">
+        <section className="volunteer-dashboard-bottom">
 
-          {/* ================= JOINED EVENTS ================= */}
+          {/* =================================================
+              JOINED EVENTS
+          ================================================= */}
 
-          <div className="events-box">
+          <div className="volunteer-events-box">
 
-            <h3>
-              Joined Events
-            </h3>
+            <div className="section-heading">
+
+              <div>
+                <h3>Joined Events</h3>
+
+                <p>
+                  Your recent volunteer activities
+                </p>
+              </div>
+
+            </div>
 
             {loadingEvents ? (
 
-              <div className="empty-box">
+              <div className="volunteer-empty-box">
+
+                <div className="empty-icon">
+                  ⏳
+                </div>
 
                 <h4>
                   Loading events...
@@ -318,7 +414,11 @@ console.log("MY REGISTRATIONS:", myRegistrations);
 
             ) : joinedEvents.length === 0 ? (
 
-              <div className="empty-box">
+              <div className="volunteer-empty-box">
+
+                <div className="empty-icon">
+                  🌱
+                </div>
 
                 <h4>
                   No events joined yet
@@ -332,125 +432,180 @@ console.log("MY REGISTRATIONS:", myRegistrations);
 
             ) : (
 
-              joinedEvents.map((registration) => {
+              <div className="volunteer-event-list">
 
-                // eventId string/object दोन्ही handle
-                const eventId =
-                  typeof registration.eventId === "object"
-                    ? registration.eventId?._id
-                    : registration.eventId;
+                {joinedEvents.map((registration) => {
 
-                const event =
-                  eventDetails[eventId];
+                  const eventId =
+                    typeof registration.eventId === "object"
+                      ? registration.eventId?._id
+                      : registration.eventId;
 
-                return (
+                  const event =
+                    eventDetails[eventId];
 
-                  <div
-                    className="dashboard-event-card"
-                    key={registration._id}
-                  >
+                  const status =
+                    String(
+                      registration.status || "Joined"
+                    ).toLowerCase();
 
-                    {/* EVENT IMAGE */}
+                  const isCompleted =
+                    status === "completed";
 
-                    {event?.image && (
+                  return (
 
-                      <img
-                        className="volunteer-event-img"
-                        src={event.image}
-                        alt={
-                          registration.eventTitle ||
-                          "Event"
-                        }
-                      />
+                    <div
+                      className="volunteer-event-card"
+                      key={registration._id}
+                    >
 
-                    )}
+                      {/* IMAGE */}
 
-                    {/* EVENT INFORMATION */}
+                      <div className="volunteer-event-image-wrapper">
 
-                    <div className="event-info">
+                        {event?.image ? (
 
-                      <h4>
-                        {registration.eventTitle ||
-                          event?.title ||
-                          "Event"}
-                      </h4>
+                          <img
+                            src={event.image}
+                            alt={
+                              registration.eventTitle ||
+                              event?.title ||
+                              "Event"
+                            }
+                            className="volunteer-event-img"
+                          />
 
-                      <p>
-                        {event?.date ||
-                          "Registered Event"}
-                      </p>
+                        ) : (
 
-                      {event?.location && (
+                          <div className="event-image-placeholder">
+                            🌱
+                          </div>
+
+                        )}
+
+                      </div>
+
+                      {/* INFORMATION */}
+
+                      <div className="volunteer-event-info">
+
+                        <h4>
+                          {registration.eventTitle ||
+                            event?.title ||
+                            "Volunteer Event"}
+                        </h4>
 
                         <p>
-                          📍 {event.location}
+                          📅{" "}
+                          {event?.date ||
+                            "Date not available"}
                         </p>
 
-                      )}
+                        {event?.location && (
+
+                          <p>
+                            📍 {event.location}
+                          </p>
+
+                        )}
+
+                      </div>
+
+                      {/* STATUS */}
+
+                      <div className="volunteer-event-status">
+
+                        <span
+                          className={
+                            isCompleted
+                              ? "completed"
+                              : "joined"
+                          }
+                        >
+                          {isCompleted
+                            ? "Completed"
+                            : "Joined"}
+                        </span>
+
+                      </div>
 
                     </div>
 
-                    {/* EVENT STATUS */}
+                  );
 
-                    <div className="event-status-container">
+                })}
 
-                      <span
-                        className={`event-status ${
-                          registration.status ===
-                          "Completed"
-                            ? "completed"
-                            : "joined"
-                        }`}
-                      >
-                        {registration.status ===
-                        "Completed"
-                          ? "Completed"
-                          : "Joined"}
-                      </span>
-
-                    </div>
-
-                  </div>
-
-                );
-
-              })
+              </div>
 
             )}
 
           </div>
 
-          {/* ================= BADGES ================= */}
+          {/* =================================================
+              BADGES
+          ================================================= */}
 
-          <div className="badges-box">
+          <div className="volunteer-badges-box">
 
-            <h3>
-              Recent Badges
-            </h3>
+            <div className="section-heading">
 
-            <div className="badge">
-              🟢 Eco Warrior
+              <div>
+                <h3>Recent Badges</h3>
+
+                <p>
+                  Your achievements
+                </p>
+              </div>
+
             </div>
 
-            <div className="badge">
-              🟠 Helper Star
-            </div>
+            <div className="volunteer-badges-list">
 
-            <div className="badge">
-              🔵 Community Star
-            </div>
+              <div className="volunteer-badge">
+                <span>🟢</span>
+                <div>
+                  <strong>Eco Warrior</strong>
+                  <small>Environment</small>
+                </div>
+              </div>
 
-            <div className="badge">
-              🟣 Event Enthusiast
-            </div>
+              <div className="volunteer-badge">
+                <span>🟠</span>
+                <div>
+                  <strong>Helper Star</strong>
+                  <small>Community</small>
+                </div>
+              </div>
 
-            <div className="badge">
-              🔴 Social Impact Maker
+              <div className="volunteer-badge">
+                <span>🔵</span>
+                <div>
+                  <strong>Community Star</strong>
+                  <small>Social Work</small>
+                </div>
+              </div>
+
+              <div className="volunteer-badge">
+                <span>🟣</span>
+                <div>
+                  <strong>Event Enthusiast</strong>
+                  <small>Participation</small>
+                </div>
+              </div>
+
+              <div className="volunteer-badge">
+                <span>🔴</span>
+                <div>
+                  <strong>Social Impact Maker</strong>
+                  <small>Volunteering</small>
+                </div>
+              </div>
+
             </div>
 
           </div>
 
-        </div>
+        </section>
 
       </main>
 
