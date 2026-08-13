@@ -317,3 +317,202 @@
   width: 100%;
   box-sizing: border-box;
 }
+
+/* ================= MOBILE RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+  .login-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* LEFT SECTION */
+
+  .login-image-section {
+    width: 100%;
+    padding: 30px 20px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .login-text {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .login-text h1 {
+    font-size: 32px;
+    line-height: 1.2;
+  }
+
+  .login-text p {
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 330px;
+    margin: 10px auto 0;
+  }
+
+  .login-image-section img {
+    width: 220px;
+    max-width: 80%;
+  }
+
+
+  /* RIGHT SECTION */
+
+  .login-form-section {
+    width: 100%;
+    padding: 20px 15px 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  /* LOGIN CARD */
+
+  .login-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 28px 20px;
+    border-radius: 20px;
+    box-sizing: border-box;
+  }
+
+  .login-card h2 {
+    font-size: 28px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    margin-bottom: 22px;
+  }
+
+
+  /* ROLE BUTTONS */
+
+  .role-box {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+
+  .role {
+    flex: 1;
+    padding: 12px 8px;
+    font-size: 14px;
+  }
+
+
+  /* INPUTS */
+
+  .login-card .input-box {
+    width: 100%;
+    margin-bottom: 16px !important;
+  }
+
+  .login-card .input-box + .input-box {
+    margin-top: 16px !important;
+  }
+
+  .login-card .input-box input {
+    width: 100%;
+    padding: 13px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+
+  /* PASSWORD ICON */
+
+  .password span {
+    right: 14px;
+    top: 13px;
+  }
+
+
+  /* FORGOT PASSWORD */
+
+  .forgot {
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+
+
+  /* LOGIN BUTTON */
+
+  .login-btn {
+    width: 100%;
+    padding: 13px;
+    font-size: 16px;
+  }
+
+
+  /* REGISTER */
+
+  .register-link {
+    font-size: 13px;
+    margin-top: 18px;
+  }
+}
+
+
+/* ================= SMALL MOBILE ================= */
+
+@media (max-width: 480px) {
+
+  .login-image-section {
+    padding: 22px 15px 15px;
+  }
+
+  .login-text h1 {
+    font-size: 28px;
+  }
+
+  .login-text p {
+    font-size: 13px;
+  }
+
+  .login-image-section img {
+    width: 180px;
+  }
+
+  .login-form-section {
+    padding: 15px 12px 30px;
+  }
+
+  .login-card {
+    padding: 24px 16px;
+    border-radius: 18px;
+  }
+
+  .login-card h2 {
+    font-size: 25px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .role {
+    font-size: 13px;
+    padding: 11px 6px;
+  }
+
+  .login-card .input-box input {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .login-btn {
+    padding: 12px;
+    font-size: 15px;
+  }
+}
