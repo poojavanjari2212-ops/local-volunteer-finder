@@ -8,7 +8,7 @@ import Events from "./pages/Events";
 import EventDetails from "./pages/EventDetails";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
-import VolunteerDashboard from "./pages/VolunteerDashboard";
+import VolunteerDashboard from "./pages/volunteerDashboard.jsx";
 import NGODashboard from "./pages/NGODashboard";
 import Certificates from "./pages/Certificates";
 import MyRegistrations from "./pages/MyRegistrations";
