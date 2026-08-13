@@ -37,7 +37,7 @@ function Layout() {
 
         <Route
           path="/volunteer-dashboard"
-          element={<VolunteerDashboard />}
+          element={<volunteerDashboard />}
         />
 
         <Route
