@@ -35,10 +35,10 @@ function Layout() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/volunteer-dashboard"
-          element={<volunteerDashboard />}
-        />
+<Route
+  path="/volunteer-dashboard"
+  element={<VolunteerDashboard />}
+/>
 
         <Route
           path="/ngo-dashboard"
