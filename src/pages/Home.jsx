@@ -37,10 +37,9 @@ const Home = () => {
       try {
 
         // ================= EVENTS =================
-
-        const eventResponse = await axios.get(
-          "http://localhost:5000/api/events"
-        );
+const eventResponse = await axios.get(
+  "https://YOUR-BACKEND-NAME.onrender.com/api/events"
+);
 
         const eventData = Array.isArray(eventResponse.data)
           ? eventResponse.data

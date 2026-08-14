@@ -14,7 +14,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 
-const API = "http://localhost:5000/api";
+const API = "https://YOUR-BACKEND-NAME.onrender.com/api";
 
 const NGODashboard = () => {
   const navigate = useNavigate();

@@ -14,7 +14,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 
-const API = "http://localhost:5000/api";
+const API = "https://local-volunteer-finder.onrender.com/api";
 
 const VolunteerDashboard = () => {
   const navigate = useNavigate();

@@ -26,10 +26,9 @@ useEffect(() => {
 
     try {
 
-      const response = await axios.get(
-        "http://localhost:5000/api/events"
-      );
-
+const response = await axios.get(
+  "https://YOUR-BACKEND-NAME.onrender.com/api/events"
+);
       console.log("API DATA:", response.data);
 
 const formattedEvents = response.data.map((event) => ({
