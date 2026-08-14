@@ -3,6 +3,8 @@ import axios from "axios";
 import { FaTrash, FaCheck } from "react-icons/fa";
 import "./ManageEvents.css";
 
+const API = "https://local-volunteer-finder.onrender.com/api";
+
 const ManageEvents = () => {
   const [events, setEvents] = useState([]);
   const [registrations, setRegistrations] = useState([]);
@@ -16,9 +18,9 @@ const ManageEvents = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/events"
-      );
+const response = await axios.get(
+  `${API}/events`
+);
 
       setEvents(response.data);
     } catch (error) {
@@ -30,9 +32,9 @@ const ManageEvents = () => {
 
   const fetchRegistrations = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/registrations"
-      );
+const response = await axios.get(
+  `${API}/registrations`
+);
 
       setRegistrations(response.data.registrations || []);
     } catch (error) {
@@ -71,9 +73,9 @@ const handleAddEvent = () => {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(
-        `http://localhost:5000/api/events/${id}`
-      );
+await axios.delete(
+  `${API}/events/${id}`
+);
 
       alert("Event Deleted Successfully");
 
@@ -99,9 +101,10 @@ const handleAddEvent = () => {
     if (!confirmComplete) return;
 
     try {
-      await axios.put(
-        `http://localhost:5000/api/registrations/${registration._id}/complete`
-      );
+    await axios.put(
+  `${API}/registrations/${registration._id}/complete`
+);
+      
 
       alert(
         `${volunteerName} completed successfully. Certificate generated.`
