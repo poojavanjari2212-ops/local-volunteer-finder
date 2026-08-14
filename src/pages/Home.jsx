@@ -35,9 +35,9 @@ useEffect(() => {
     try {
       // ================= HOME STATS =================
 
-      const statsResponse = await axios.get(
-        "https://local-volunteer-finder-1.onrender.com/api/events/home-stats"
-      );
+const statsResponse = await axios.get(
+  "https://local-volunteer-finder.onrender.com/api/events/home-stats"
+);
 
       console.log("HOME STATS:", statsResponse.data);
 
@@ -52,10 +52,9 @@ useEffect(() => {
 
       // ================= EVENTS =================
 
-      const eventResponse = await axios.get(
-        "https://local-volunteer-finder-1.onrender.com/api/events"
-      );
-
+const eventResponse = await axios.get(
+  "https://local-volunteer-finder.onrender.com/api/events"
+);
       console.log("HOME EVENTS:", eventResponse.data);
 
       const eventData = Array.isArray(eventResponse.data)
