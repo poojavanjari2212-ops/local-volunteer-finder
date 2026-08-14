@@ -38,7 +38,7 @@ const Home = () => {
 
         // ================= EVENTS =================
 const eventResponse = await axios.get(
-  "https://YOUR-BACKEND-NAME.onrender.com/api/events"
+  "https://local-volunteer-finder-1.onrender.com/api/events"
 );
 
         const eventData = Array.isArray(eventResponse.data)
