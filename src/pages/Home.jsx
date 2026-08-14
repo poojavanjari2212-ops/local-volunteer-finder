@@ -30,83 +30,56 @@ const Home = () => {
 
   // ================= GET HOME DATA =================
 
-  useEffect(() => {
+useEffect(() => {
+  const fetchHomeData = async () => {
+    try {
+      // ================= HOME STATS =================
 
-    const fetchHomeData = async () => {
+      const statsResponse = await axios.get(
+        "https://local-volunteer-finder-1.onrender.com/api/events/home-stats"
+      );
 
-      try {
+      console.log("HOME STATS:", statsResponse.data);
 
-        // ================= EVENTS =================
-const eventResponse = await axios.get(
-  "https://local-volunteer-finder-1.onrender.com/api/events"
-);
+      const statsData = statsResponse.data;
 
-        const eventData = Array.isArray(eventResponse.data)
-          ? eventResponse.data
-          : [];
+      setStats({
+        events: statsData.totalEvents || 0,
+        ngos: statsData.totalNGOs || 0,
+        volunteers: statsData.totalVolunteers || 0,
+        cities: statsData.totalCities || 0,
+      });
 
+      // ================= EVENTS =================
 
-        // ================= NGO COUNT =================
+      const eventResponse = await axios.get(
+        "https://local-volunteer-finder-1.onrender.com/api/events"
+      );
 
-        const organizers = eventData
-          .map((event) => event.createdBy?.trim())
-          .filter(Boolean);
+      console.log("HOME EVENTS:", eventResponse.data);
 
-        const uniqueNGOs = new Set(organizers);
+      const eventData = Array.isArray(eventResponse.data)
+        ? eventResponse.data
+        : [];
 
+      // ================= LATEST 3 EVENTS =================
 
-        // ================= TOTAL VOLUNTEERS =================
+      setEvents(
+        [...eventData]
+          .reverse()
+          .slice(0, 3)
+      );
 
-        const totalVolunteers = eventData.reduce(
-          (total, event) => {
-            return total + Number(event.volunteers || 0);
-          },
-          0
-        );
+    } catch (error) {
+      console.log(
+        "HOME DATA ERROR:",
+        error.response?.data || error.message
+      );
+    }
+  };
 
-
-        // ================= CITY COUNT =================
-
-        const locations = eventData
-          .map((event) => event.location?.trim().toLowerCase())
-          .filter(Boolean);
-
-        const uniqueCities = new Set(locations);
-
-
-        // ================= SET STATS =================
-
-        setStats({
-          events: eventData.length,
-          ngos: uniqueNGOs.size,
-          volunteers: totalVolunteers,
-          cities: uniqueCities.size,
-        });
-
-
-        // ================= LATEST 3 EVENTS =================
-
-        setEvents(
-          [...eventData]
-            .reverse()
-            .slice(0, 3)
-        );
-
-
-      } catch (error) {
-
-        console.log(
-          "HOME DATA ERROR:",
-          error.response?.data || error.message
-        );
-
-      }
-
-    };
-
-    fetchHomeData();
-
-  }, []);
+  fetchHomeData();
+}, []);
 
 
   return (
