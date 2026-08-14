@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./AddEvent.css";
 import axios from "axios";
 
+const API = "https://local-volunteer-finder.onrender.com/api";
+
 const AddEvent = () => {
 const [editData, setEditData] = useState(null);
 
@@ -102,8 +104,8 @@ useEffect(() => {
 
     try {
       if (editData) {
-        await axios.put(
-          `http://localhost:5000/api/events/${editData._id}`,
+       await axios.put(
+  `${API}/events/${editData._id}`,
           {
             title: event.name,
             description: event.description,
@@ -125,8 +127,8 @@ useEffect(() => {
 
         console.log("IMAGE LENGTH:", image?.length);
 console.log("IMAGE START:", image?.substring(0, 50));
-        const response = await axios.post(
-          "http://localhost:5000/api/events",
+       const response = await axios.post(
+  `${API}/events`,
 
           
           {
