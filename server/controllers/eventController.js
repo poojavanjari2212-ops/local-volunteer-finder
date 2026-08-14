@@ -142,21 +142,14 @@ const getHomeStats = async (req, res) => {
     const totalEvents = await Event.countDocuments();
 
     // Get all registrations
-    const registrations = await Registration.find(
-      {},
-      "volunteerId"
-    );
-
-    // Unique Volunteers
-    const uniqueVolunteers = new Set(
-      registrations
-        .map((item) =>
-          item.volunteerId?.trim().toLowerCase()
-        )
-        .filter(Boolean)
-    );
-
-    const totalVolunteers = uniqueVolunteers.size;
+    const registrations = await Registration.find()
+// Total Volunteers
+const totalVolunteers = await Registration.distinct("volunteerId").then(
+  (volunteerIds) =>
+    volunteerIds.filter(
+      (id) => id !== null && id !== undefined && id !== ""
+    ).length
+);
 
     // Get all events for cities
     const events = await Event.find({}, "location");
@@ -164,6 +157,7 @@ const getHomeStats = async (req, res) => {
     // Unique Cities
     const uniqueCities = new Set(
       events
+      
         .map((event) => event.location?.trim())
         .filter(Boolean)
     );
