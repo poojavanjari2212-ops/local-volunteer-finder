@@ -27,7 +27,7 @@ useEffect(() => {
     try {
 
 const response = await axios.get(
-  "https://YOUR-BACKEND-NAME.onrender.com/api/events"
+  "https://local-volunteer-finder.onrender.com/api/events"
 );
       console.log("API DATA:", response.data);
 
