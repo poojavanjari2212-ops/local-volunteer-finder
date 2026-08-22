@@ -13,8 +13,13 @@
     width: 100%;
     min-height: 100vh;
     background: #f6fff8;
-    padding: 50px 80px;
+    padding: 50px 30px;
     overflow-x: hidden;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: 30px;
 }
 
 
@@ -24,7 +29,8 @@
 
 .events-header {
     width: 100%;
-    margin-bottom: 25px;
+    max-width: 1200px;
+    margin: 0 auto 20px;
 }
 
 .events-header h1 {
@@ -46,11 +52,15 @@
 
 .filter-bar {
     width: 100%;
+    max-width: 1200px;
     display: flex;
-    gap: 15px;
-    margin-bottom: 35px;
-    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto 20px;
+    flex-wrap: nowrap;
 }
+
 
 .filter-bar input,
 .filter-bar select {
@@ -93,10 +103,15 @@
 
 .event-grid {
     width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 28px;
+
+    grid-column: 1 / -1;
 }
+
 
 
 /* =========================================================
@@ -258,12 +273,13 @@
 ========================================================= */
 
 @media (max-width: 600px) {
-
     .events-page {
         width: 100%;
         min-height: 100vh;
         padding: 30px 15px;
         overflow-x: hidden;
+
+        display: block;
     }
 
     /* HEADER */
@@ -285,14 +301,12 @@
 
 
     /* FILTER */
-
-    .filter-bar {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 25px;
-    }
+.events-header,
+.filter-bar {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
     .filter-bar input,
     .filter-bar select {

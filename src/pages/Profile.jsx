@@ -41,27 +41,79 @@ function Profile() {
   const [joinedCount, setJoinedCount] = useState(0);
 
 
-  // Logged-in volunteer चे registrations
+  // ================= GET LOGGED-IN VOLUNTEER EVENTS =================
+
   useEffect(() => {
 
     const fetchJoinedCount = async () => {
 
       try {
 
+        if (!user.email) {
+          setJoinedCount(0);
+          return;
+        }
+
         const response = await axios.get(
-          "http://localhost:5000/api/registrations"
+          "https://local-volunteer-finder.onrender.com/api/registrations"
         );
 
         const allRegistrations =
-          response.data.registrations || [];
+          response.data?.registrations ||
+          response.data ||
+          [];
 
+        console.log(
+          "ALL REGISTRATIONS:",
+          allRegistrations
+        );
+
+        const loggedInEmail =
+          String(user.email)
+            .trim()
+            .toLowerCase();
+
+        // Only current volunteer registrations
         const myRegistrations =
           allRegistrations.filter(
-            (registration) =>
-              registration.volunteerId === user.email
+            (registration) => {
+
+              let volunteerId =
+                registration.volunteerId;
+
+              // volunteerId object असल्यास
+              if (
+                typeof volunteerId === "object" &&
+                volunteerId !== null
+              ) {
+                volunteerId =
+                  volunteerId.email ||
+                  volunteerId._id ||
+                  volunteerId.username;
+              }
+
+              const registrationEmail =
+                String(volunteerId || "")
+                  .trim()
+                  .toLowerCase();
+
+              return (
+                registrationEmail ===
+                loggedInEmail
+              );
+
+            }
           );
 
-        setJoinedCount(myRegistrations.length);
+        console.log(
+          "MY REGISTRATIONS:",
+          myRegistrations
+        );
+
+        // Joined + Completed दोन्ही count होतील
+        setJoinedCount(
+          myRegistrations.length
+        );
 
         console.log(
           "MY JOINED COUNT:",
@@ -76,6 +128,7 @@ function Profile() {
           error.message
         );
 
+        setJoinedCount(0);
       }
 
     };
@@ -85,7 +138,8 @@ function Profile() {
   }, [user.email]);
 
 
-  // Save Profile
+  // ================= SAVE PROFILE =================
+
   const saveProfile = () => {
 
     localStorage.setItem(
@@ -102,7 +156,7 @@ function Profile() {
 
     <div className="profile-container">
 
-      {/* Profile Header */}
+      {/* ================= PROFILE HEADER ================= */}
 
       <div className="profile-header">
 
@@ -118,18 +172,25 @@ function Profile() {
 
         </div>
 
-<button
-  className="edit-btn"
-  onClick={() => setIsEdit(!isEdit)}
->
-  <FaEdit />
-  {isEdit ? "Cancel" : "Edit Profile"}
-</button>
+        <button
+          className="edit-btn"
+          onClick={() =>
+            setIsEdit(!isEdit)
+          }
+        >
+
+          <FaEdit />
+
+          {isEdit
+            ? "Cancel"
+            : "Edit Profile"}
+
+        </button>
 
       </div>
 
 
-      {/* Edit Profile */}
+      {/* ================= EDIT PROFILE ================= */}
 
       {isEdit && (
 
@@ -195,11 +256,11 @@ function Profile() {
       )}
 
 
-      {/* Profile Details */}
+      {/* ================= PROFILE DETAILS ================= */}
 
       <div className="profile-details">
 
-        {/* Email */}
+        {/* EMAIL */}
 
         <div className="detail-card">
 
@@ -209,14 +270,16 @@ function Profile() {
 
             <span>Email</span>
 
-            <p>{profile.email}</p>
+            <p>
+              {profile.email}
+            </p>
 
           </div>
 
         </div>
 
 
-        {/* Phone */}
+        {/* PHONE */}
 
         <div className="detail-card">
 
@@ -227,7 +290,8 @@ function Profile() {
             <span>Phone</span>
 
             <p>
-              {profile.phone || "Not provided"}
+              {profile.phone ||
+                "Not provided"}
             </p>
 
           </div>
@@ -235,7 +299,7 @@ function Profile() {
         </div>
 
 
-        {/* Location */}
+        {/* LOCATION */}
 
         <div className="detail-card">
 
@@ -245,14 +309,16 @@ function Profile() {
 
             <span>Location</span>
 
-            <p>{profile.location}</p>
+            <p>
+              {profile.location}
+            </p>
 
           </div>
 
         </div>
 
 
-        {/* Events Joined */}
+        {/* EVENTS JOINED */}
 
         <div className="detail-card">
 
@@ -262,7 +328,9 @@ function Profile() {
 
             <span>Events Joined</span>
 
-            <p>{joinedCount} Events</p>
+            <p>
+              {joinedCount} Events
+            </p>
 
           </div>
 
@@ -271,15 +339,16 @@ function Profile() {
       </div>
 
 
-      {/* About */}
+      {/* ================= ABOUT ================= */}
 
       <div className="about-card">
 
         <h3>About Me</h3>
 
         <p>
-          Passionate volunteer who loves participating in
-          community service activities and social initiatives.
+          Passionate volunteer who loves
+          participating in community service
+          activities and social initiatives.
         </p>
 
       </div>

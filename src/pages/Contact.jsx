@@ -27,7 +27,7 @@ const Contact = () => {
       setSending(true);
 
       const response = await axios.post(
-        "http://localhost:5000/api/contact",
+        "https://local-volunteer-finder.onrender.com/api/contact",
         formData
       );
 
@@ -42,14 +42,23 @@ const Contact = () => {
         subject: "",
         message: "",
       });
+
     } catch (error) {
-      console.log("CONTACT FRONTEND ERROR:", error);
-      console.log("RESPONSE:", error.response?.data);
+      console.log(
+        "CONTACT FRONTEND ERROR:",
+        error
+      );
+
+      console.log(
+        "RESPONSE:",
+        error.response?.data
+      );
 
       alert(
         error.response?.data?.error ||
           "Failed to send message. Please try again."
       );
+
     } finally {
       setSending(false);
     }
@@ -58,14 +67,20 @@ const Contact = () => {
   return (
     <div className="contact-page">
 
+      {/* ================= HEADER ================= */}
+
       <div className="contact-header">
+
         <h1>Get In Touch</h1>
 
         <p>
           We'd love to hear from you. Feel free to contact the
           Information Technology Department.
         </p>
+
       </div>
+
+      {/* ================= CONTACT FORM ================= */}
 
       <div className="contact-container">
 
@@ -75,7 +90,10 @@ const Contact = () => {
 
           <form onSubmit={handleSubmit}>
 
+            {/* NAME */}
+
             <div className="input-group">
+
               <input
                 type="text"
                 name="name"
@@ -84,9 +102,13 @@ const Contact = () => {
                 onChange={handleChange}
                 required
               />
+
             </div>
 
+            {/* EMAIL */}
+
             <div className="input-group">
+
               <input
                 type="email"
                 name="email"
@@ -95,9 +117,13 @@ const Contact = () => {
                 onChange={handleChange}
                 required
               />
+
             </div>
 
+            {/* SUBJECT */}
+
             <div className="input-group">
+
               <input
                 type="text"
                 name="subject"
@@ -106,9 +132,13 @@ const Contact = () => {
                 onChange={handleChange}
                 required
               />
+
             </div>
 
+            {/* MESSAGE */}
+
             <div className="input-group">
+
               <textarea
                 rows="6"
                 name="message"
@@ -117,18 +147,23 @@ const Contact = () => {
                 onChange={handleChange}
                 required
               ></textarea>
+
             </div>
+
+            {/* SEND BUTTON */}
 
             <button
               type="submit"
               className="send-btn"
               disabled={sending}
             >
+
               <FaPaperPlane />
 
               {sending
                 ? "Sending..."
                 : "Send Message"}
+
             </button>
 
           </form>
