@@ -2,12 +2,16 @@ const Contact = require("../models/Contact");
 const nodemailer = require("nodemailer");
 
 const createContact = async (req, res) => {
-
   console.log("EMAIL USER IN CONTACT:", process.env.EMAIL_USER);
-console.log("EMAIL PASS LENGTH IN CONTACT:", process.env.EMAIL_PASS?.length);
+  console.log(
+    "EMAIL PASS LENGTH IN CONTACT:",
+    process.env.EMAIL_PASS?.length
+  );
+
   try {
     const { name, email, subject, message } = req.body;
 
+    // Validate fields
     if (!name || !email || !subject || !message) {
       return res.status(400).json({
         message: "Please fill all fields",
@@ -27,18 +31,18 @@ console.log("EMAIL PASS LENGTH IN CONTACT:", process.env.EMAIL_PASS?.length);
     // Gmail transporter
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 10000,
+      connectionTimeout: 20000,
+      greetingTimeout: 20000,
+      socketTimeout: 20000,
     });
 
-    // Send email to your own email
+    // Send email
     const info = await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_USER,
@@ -62,7 +66,6 @@ ${message}
       message: "Message sent successfully!",
       contact,
     });
-
   } catch (error) {
     console.log("========== CONTACT ERROR ==========");
     console.log("MESSAGE:", error.message);
