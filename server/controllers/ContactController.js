@@ -22,18 +22,28 @@ const createContact = async (req, res) => {
     console.log("📩 Contact saved in MongoDB");
 
     // Send email using Resend API
-    const resendResponse = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: "onboarding@resend.dev",
-        to: [process.env.EMAIL_USER],
-        reply_to: email,
-        subject: subject,
-        text: `
+    const resendResponse = await fetch(
+      "https://api.resend.com/emails",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        },
+
+        body: JSON.stringify({
+          from: "onboarding@resend.dev",
+
+          // Contact messages will be received on your email
+          to: ["poojavanjari2212@gmail.com"],
+
+          // Visitor's email
+          reply_to: email,
+
+          subject: subject,
+
+          text: `
 New Contact Message
 
 Name: ${name}
@@ -42,9 +52,10 @@ Subject: ${subject}
 
 Message:
 ${message}
-        `,
-      }),
-    });
+          `,
+        }),
+      }
+    );
 
     const resendData = await resendResponse.json();
 
@@ -76,6 +87,7 @@ ${message}
   }
 };
 
+// Get all contact messages
 const getContacts = async (req, res) => {
   try {
     const contacts = await Contact.find().sort({ createdAt: -1 });
