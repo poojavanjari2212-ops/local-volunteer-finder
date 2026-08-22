@@ -27,9 +27,9 @@ const MyRegistrations = () => {
 
 
         // Get all registrations
-        const response = await axios.get(
-          "http://localhost:5000/api/registrations"
-        );
+const response = await axios.get(
+  "https://local-volunteer-finder.onrender.com/api/registrations"
+);
 
         const allRegistrations =
           response.data.registrations || [];
@@ -98,11 +98,10 @@ console.log("MY REGISTRATIONS:", myRegistrations);
                 }
 
 
-                const eventResponse =
-                  await axios.get(
-                    `http://localhost:5000/api/events/${eventId}`
-                  );
-
+const eventResponse =
+  await axios.get(
+    `https://local-volunteer-finder.onrender.com/api/events/${eventId}`
+  );
 
                 details[eventId] =
                   eventResponse.data;

@@ -108,9 +108,8 @@ const fetchEvent = async () => {
 try {
 
 const response = await axios.get(
-`http://localhost:5000/api/events/${id}`
+  `https://local-volunteer-finder.onrender.com/api/events/${id}`
 );
-
 console.log("SINGLE EVENT:", response.data);
 
 setEvent(response.data);
@@ -170,8 +169,8 @@ const handleJoin = async () => {
 
   try {
     // Registration
-    const registrationResponse = await axios.post(
-      "http://localhost:5000/api/registrations",
+const registrationResponse = await axios.post(
+  "https://local-volunteer-finder.onrender.com/api/registrations",
       {
         volunteerId: user.email.trim().toLowerCase(),
         volunteerName: user.name || user.email,
@@ -186,8 +185,8 @@ const handleJoin = async () => {
     );
 
     // Volunteer count +1
-    await axios.put(
-      `http://localhost:5000/api/events/${event._id}`,
+await axios.put(
+  `https://local-volunteer-finder.onrender.com/api/events/${event._id}`,
       {
         volunteers: Number(event.volunteers || 0) + 1,
       }

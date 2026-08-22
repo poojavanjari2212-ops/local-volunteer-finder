@@ -21,9 +21,9 @@ useEffect(() => {
 
     try {
 
-      const response = await axios.get(
-        "http://localhost:5000/api/certificates"
-      );
+const response = await axios.get(
+  "https://local-volunteer-finder.onrender.com/api/certificates"
+);
 
       console.log("CERTIFICATES API:", response.data);
 
@@ -56,7 +56,7 @@ user.email?.trim().toLowerCase() ||
 
 // सर्व registrations घेणे
 const registrationResponse = await axios.get(
-  "http://localhost:5000/api/registrations"
+  "https://local-volunteer-finder.onrender.com/api/registrations"
 );
 
 const allRegistrations =

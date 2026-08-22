@@ -15,7 +15,7 @@ const ViewVolunteers = () => {
 
         // Get Events
         const eventResponse = await axios.get(
-          "http://localhost:5000/api/events"
+         "https://local-volunteer-finder.onrender.com/api/events"
         );
 
         const allEvents = eventResponse.data || [];
@@ -30,7 +30,7 @@ const ViewVolunteers = () => {
 
         // Get Registrations
         const registrationResponse = await axios.get(
-          "http://localhost:5000/api/registrations"
+          "https://local-volunteer-finder.onrender.com/api/registrations"
         );
 
         const registrations =
