@@ -1,13 +1,6 @@
 const Contact = require("../models/Contact");
-const nodemailer = require("nodemailer");
 
 const createContact = async (req, res) => {
-  console.log("EMAIL USER IN CONTACT:", process.env.EMAIL_USER);
-  console.log(
-    "EMAIL PASS LENGTH IN CONTACT:",
-    process.env.EMAIL_PASS?.length
-  );
-
   try {
     const { name, email, subject, message } = req.body;
 
@@ -28,27 +21,19 @@ const createContact = async (req, res) => {
 
     console.log("📩 Contact saved in MongoDB");
 
-    // Gmail transporter
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+    // Send email using Resend API
+    const resendResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
       },
-      connectionTimeout: 20000,
-      greetingTimeout: 20000,
-      socketTimeout: 20000,
-    });
-
-    // Send email
-    const info = await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER,
-      replyTo: email,
-      subject: subject,
-      text: `
+      body: JSON.stringify({
+        from: "onboarding@resend.dev",
+        to: [process.env.EMAIL_USER],
+        reply_to: email,
+        subject: subject,
+        text: `
 New Contact Message
 
 Name: ${name}
@@ -57,10 +42,22 @@ Subject: ${subject}
 
 Message:
 ${message}
-      `,
+        `,
+      }),
     });
 
-    console.log("📧 Email sent successfully:", info.messageId);
+    const resendData = await resendResponse.json();
+
+    // Check Resend response
+    if (!resendResponse.ok) {
+      console.log("RESEND ERROR:", resendData);
+
+      throw new Error(
+        resendData.message || "Failed to send email using Resend"
+      );
+    }
+
+    console.log("📧 Email sent successfully:", resendData.id);
 
     return res.status(201).json({
       message: "Message sent successfully!",
